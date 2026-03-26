@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+"""kmp-skills-eval — CLI for benchmarking agent skills."""
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from lib.cli import main
+
+main()

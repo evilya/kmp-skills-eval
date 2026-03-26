@@ -1,0 +1,61 @@
+{
+  "eval_name": "recipe-app",
+  "project": "recipe-app",
+  "prompt": "I want to upgrade this Recipe App KMP project to AGP 9.0. Currently on AGP 8.12.3. The shared module uses kotlin.multiplatform + com.android.library. The androidApp, tvApp, and automotiveApp modules each use kotlin.multiplatform + com.android.application (incompatible with AGP 9). Please do the full migration.",
+  "skill_command": "/kotlin-tooling-agp9-migration",
+  "source": "Recipe App — shared is KMP+library (Path A), androidApp/tvApp/automotiveApp have KMP+application (Path B)",
+  "assertions": [
+    {
+      "name": "shared-kmp-library-plugin",
+      "type": "file_contains_one_of",
+      "file": "shared/build.gradle.kts",
+      "expected_any": [
+        "com.android.kotlin.multiplatform.library",
+        "androidKmpLibrary",
+        "androidMultiplatformLibrary",
+        "android.kotlin.multiplatform.library",
+        "androidKotlinMultiplatformLibrary"
+      ]
+    },
+    {
+      "name": "shared-no-old-android-library",
+      "type": "file_not_contains",
+      "file": "shared/build.gradle.kts",
+      "expected": "androidLibrary"
+    },
+    {
+      "name": "shared-no-top-level-android",
+      "type": "file_not_matches",
+      "file": "shared/build.gradle.kts",
+      "pattern": "^android\\s*\\{"
+    },
+    {
+      "name": "android-app-no-kmp",
+      "type": "file_not_contains",
+      "file": "androidApp/build.gradle.kts",
+      "expected": "kotlinMultiplatform"
+    },
+    {
+      "name": "agp-version-9-plus",
+      "type": "file_matches",
+      "file": "gradle/libs.versions.toml",
+      "pattern": "agp\\s*=\\s*\"9\\."
+    },
+    {
+      "name": "gradle-wrapper-9-plus",
+      "type": "file_matches",
+      "file": "gradle/wrapper/gradle-wrapper.properties",
+      "pattern": "gradle-9\\."
+    }
+  ],
+  "agent_rubric": [
+    "The shared module's com.android.library plugin is replaced with com.android.kotlin.multiplatform.library",
+    "The shared module's android {} block is nested inside kotlin { }",
+    "The androidApp module no longer applies kotlin.multiplatform (pure Android app with com.android.application only)",
+    "The version catalog has a plugin alias for com.android.kotlin.multiplatform.library",
+    "AGP version in gradle/libs.versions.toml is updated to 9.0.0 or higher",
+    "Gradle wrapper in gradle/wrapper/gradle-wrapper.properties is updated to 9.1.0 or higher",
+    "No removed gradle properties are present in gradle.properties (android.enableLegacyVariantApi, android.r8.integratedResourceShrinking, android.enableNewResourceShrinker.preciseShrinking)",
+    "The migration does not break the existing dependency structure between modules"
+  ]
+}

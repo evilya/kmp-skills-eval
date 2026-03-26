@@ -1,0 +1,69 @@
+{
+  "eval_name": "people-in-space",
+  "project": "people-in-space",
+  "prompt": "I'm upgrading the People in Space KMP project (github.com/joreilly/PeopleInSpace) to AGP 9.0. Currently on AGP 8.12.3. The common module uses kotlin.multiplatform + com.android.library. The app module uses kotlin(\"android\"). Please analyze and migrate it.",
+  "skill_command": "/kotlin-tooling-agp9-migration",
+  "source": "joreilly/PeopleInSpace — common has KMP+library (Path A), app has kotlin.android, uses SKIE + SQLDelight + KSP",
+  "assertions": [
+    {
+      "name": "common-kmp-library-plugin",
+      "type": "file_contains_one_of",
+      "file": "common/build.gradle.kts",
+      "expected_any": [
+        "com.android.kotlin.multiplatform.library",
+        "androidKmpLibrary",
+        "androidMultiplatformLibrary",
+        "android.kotlin.multiplatform.library",
+        "androidKotlinMultiplatformLibrary"
+      ]
+    },
+    {
+      "name": "common-no-old-android-library",
+      "type": "file_not_contains",
+      "file": "common/build.gradle.kts",
+      "expected": "libs.plugins.android.library"
+    },
+    {
+      "name": "common-no-top-level-android",
+      "type": "file_not_matches",
+      "file": "common/build.gradle.kts",
+      "pattern": "^android\\s*\\{"
+    },
+    {
+      "name": "common-no-androidUnitTest",
+      "type": "file_not_contains",
+      "file": "common/build.gradle.kts",
+      "expected": "androidUnitTest"
+    },
+    {
+      "name": "app-no-kotlin-android",
+      "type": "file_not_contains",
+      "file": "app/build.gradle.kts",
+      "expected": "kotlin(\"android\")"
+    },
+    {
+      "name": "agp-version-9-plus",
+      "type": "file_matches",
+      "file": "gradle/libs.versions.toml",
+      "pattern": "androidGradlePlugin\\s*=\\s*\"9\\."
+    },
+    {
+      "name": "gradle-wrapper-9-plus",
+      "type": "file_matches",
+      "file": "gradle/wrapper/gradle-wrapper.properties",
+      "pattern": "gradle-9\\."
+    }
+  ],
+  "agent_rubric": [
+    "The common module's com.android.library plugin is replaced with com.android.kotlin.multiplatform.library",
+    "The common module's android {} block is nested inside kotlin { }",
+    "Source set androidUnitTest is renamed to androidHostTest in the common module",
+    "The org.jetbrains.kotlin.android plugin is removed from the app module",
+    "SKIE plugin compatibility with AGP 9 is handled",
+    "SQLDelight plugin compatibility with AGP 9 is maintained",
+    "AGP version in gradle/libs.versions.toml is updated to 9.0.0 or higher",
+    "Gradle wrapper in gradle/wrapper/gradle-wrapper.properties is updated to 9.1.0 or higher",
+    "No removed gradle properties are present in gradle.properties (android.enableLegacyVariantApi, android.r8.integratedResourceShrinking, android.enableNewResourceShrinker.preciseShrinking)",
+    "The migration does not break the existing dependency structure between modules"
+  ]
+}

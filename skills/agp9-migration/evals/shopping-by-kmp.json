@@ -1,0 +1,45 @@
+{
+  "eval_name": "shopping-by-kmp",
+  "project": "shopping-by-kmp",
+  "prompt": "I want to upgrade this Shopping By KMP project to AGP 9.0. Currently on AGP 8.9.1. The androidApp, tvApp, and automotiveApp modules each use kotlin.multiplatform + com.android.application via custom convention plugins in build-logic/. The shared module is pure kotlin.multiplatform (no Android plugin). Please do the full migration.",
+  "skill_command": "/kotlin-tooling-agp9-migration",
+  "source": "Shopping By KMP — androidApp/tvApp/automotiveApp have KMP+application via convention plugins (Path B), shared is pure KMP",
+  "assertions": [
+    {
+      "name": "android-app-no-kmp",
+      "type": "file_not_contains",
+      "file": "androidApp/build.gradle.kts",
+      "expected": "kotlinMultiplatform"
+    },
+    {
+      "name": "agp-version-9-plus",
+      "type": "file_matches",
+      "file": "gradle/libs.versions.toml",
+      "pattern": "agp\\s*=\\s*\"9\\."
+    },
+    {
+      "name": "gradle-wrapper-9-plus",
+      "type": "file_matches",
+      "file": "gradle/wrapper/gradle-wrapper.properties",
+      "pattern": "gradle-9\\."
+    },
+    {
+      "name": "settings-includes-android-app",
+      "type": "file_contains_one_of",
+      "file": "settings.gradle.kts",
+      "expected_any": [
+        "androidApp",
+        ":androidApp"
+      ]
+    }
+  ],
+  "agent_rubric": [
+    "The androidApp module no longer uses kotlin.multiplatform (pure Android app)",
+    "settings.gradle.kts includes the androidApp module",
+    "Custom convention plugins in build-logic/ are updated for AGP 9 compatibility",
+    "AGP version in gradle/libs.versions.toml is updated to 9.0.0 or higher",
+    "Gradle wrapper in gradle/wrapper/gradle-wrapper.properties is updated to 9.1.0 or higher",
+    "No removed gradle properties are present in gradle.properties (android.enableLegacyVariantApi, android.r8.integratedResourceShrinking, android.enableNewResourceShrinker.preciseShrinking)",
+    "The migration does not break the existing dependency structure between modules"
+  ]
+}

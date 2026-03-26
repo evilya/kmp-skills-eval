@@ -1,0 +1,55 @@
+{
+  "eval_name": "jetcaster",
+  "project": "jetcaster",
+  "prompt": "I'm migrating the Jetcaster KMP project to AGP 9.0. It currently uses AGP 8.11.1. The mobile module uses kotlin.android which is now built-in to AGP 9.0. It also has kotlinOptions that needs migration to compilerOptions. Please analyze the project and perform the full migration.",
+  "skill_command": "/kotlin-tooling-agp9-migration",
+  "source": "Jetcaster — already uses com.android.kotlin.multiplatform.library; mobile has kotlin.android + kotlinOptions needing migration",
+  "assertions": [
+    {
+      "name": "agp-version-9-plus",
+      "type": "file_matches",
+      "file": "gradle/libs.versions.toml",
+      "pattern": "androidGradlePlugin\\s*=\\s*\"9\\."
+    },
+    {
+      "name": "gradle-wrapper-9-plus",
+      "type": "file_matches",
+      "file": "gradle/wrapper/gradle-wrapper.properties",
+      "pattern": "gradle-9\\."
+    },
+    {
+      "name": "no-top-level-android-in-sharedUi",
+      "type": "file_not_matches",
+      "file": "sharedUi/build.gradle.kts",
+      "pattern": "^android\\s*\\{"
+    },
+    {
+      "name": "mobile-no-kotlin-android",
+      "type": "file_not_contains",
+      "file": "mobile/build.gradle.kts",
+      "expected": "kotlin.android"
+    },
+    {
+      "name": "mobile-no-kotlinOptions",
+      "type": "file_not_contains",
+      "file": "mobile/build.gradle.kts",
+      "expected": "kotlinOptions"
+    },
+    {
+      "name": "mobile-has-compilerOptions",
+      "type": "file_contains",
+      "file": "mobile/build.gradle.kts",
+      "expected": "compilerOptions"
+    }
+  ],
+  "agent_rubric": [
+    "The sharedUi module's android config remains inside kotlin { androidLibrary { } } (not moved to top level)",
+    "The mobile module's org.jetbrains.kotlin.android plugin is removed (AGP 9 built-in Kotlin)",
+    "The mobile module's kotlinOptions {} block is migrated to kotlin { compilerOptions {} }",
+    "KSP plugin compatibility with AGP 9 is maintained",
+    "AGP version in gradle/libs.versions.toml is updated to 9.0.0 or higher",
+    "Gradle wrapper in gradle/wrapper/gradle-wrapper.properties is updated to 9.1.0 or higher",
+    "No removed gradle properties are present in gradle.properties (android.enableLegacyVariantApi, android.r8.integratedResourceShrinking, android.enableNewResourceShrinker.preciseShrinking)",
+    "The migration does not break the existing dependency structure between modules"
+  ]
+}

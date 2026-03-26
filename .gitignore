@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.idea
+config/defaults.local.conf
+skills/*/skill.json
+
+# Results: ignore everything except reports
+results/**/outputs/
+results/**/claude_output.jsonl
+results/**/claude_stderr.log
+results/**/timing.json
+results/**/grading.json
+results/**/agent_grading.json
+results/**/eval_metadata.json
+results/**/claude_response.json

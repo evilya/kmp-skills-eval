@@ -1,0 +1,53 @@
+{
+  "eval_name": "blueprint-with-database",
+  "project": "d-kmp-sample",
+  "prompt": "I want to set up this KMP project as a new app called \"RecipeBox\" — a recipe collection app targeting Android and iOS. Use Kotlin Multiplatform with Compose Multiplatform, Room for database (to store recipes), Ktor for fetching recipes from an API, Koin for DI, and Jetpack Navigation 3. Please: 1) Create project management files in a .skills/ directory (guide with phased execution, hints, validation plan), 2) Create an AGENTS.md, 3) Configure dependencies in libs.versions.toml, 4) Set up Room database with a Recipe entity and RecipeDao, 5) Set up navigation with 3 screens: RecipeList, RecipeDetail, AddRecipe. Only target Android and iOS.",
+  "source": "Greenfield KMP project with Room database setup from d-kmp-sample template",
+  "assertions": [
+    {
+      "name": "agents-md-created",
+      "type": "file_exists",
+      "file": "AGENTS.md"
+    },
+    {
+      "name": "room-in-versions",
+      "type": "file_contains",
+      "file": "gradle/libs.versions.toml",
+      "expected": "room"
+    },
+    {
+      "name": "ktor-in-versions",
+      "type": "file_contains",
+      "file": "gradle/libs.versions.toml",
+      "expected": "ktor"
+    },
+    {
+      "name": "database-entity-exists",
+      "type": "file_contains_one_of",
+      "file": "shared/src/commonMain/kotlin/com/example/shared/data/Recipe.kt",
+      "expected_any": [
+        "@Entity",
+        "Recipe",
+        "data class"
+      ]
+    },
+    {
+      "name": "no-desktop-target",
+      "type": "file_not_contains",
+      "file": "shared/build.gradle.kts",
+      "expected": "jvm()"
+    }
+  ],
+  "agent_rubric": [
+    "An AGENTS.md file exists at the project root with project-specific AI agent instructions",
+    "Project management files exist in .skills/ directory with at least a guide task",
+    "gradle/libs.versions.toml includes Room, Ktor, Koin dependencies with version numbers",
+    "Room database is configured with a Recipe entity using the @Entity annotation",
+    "A RecipeDao interface exists with basic CRUD operations (insert, query, delete)",
+    "Room database builder follows the KMP pattern with expect/actual for platform-specific initialization (androidMain and iosMain)",
+    "Navigation uses Jetpack Navigation 3, NOT the older navigation-compose library",
+    "Desktop/web targets are removed — only Android and iOS remain",
+    "The project compiles conceptually — imports and package structure are consistent",
+    "Room's fallbackToDestructiveMigration is used during development as recommended by the hints"
+  ]
+}

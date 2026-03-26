@@ -1,0 +1,100 @@
+{
+  "eval_name": "kotlinconf-app",
+  "project": "kotlinconf-app",
+  "prompt": "I need to migrate the KotlinConf App KMP project (github.com/JetBrains/kotlinconf-app) to AGP 9.0. Currently on AGP 8.11.2. There are three KMP library modules (shared, ui-components, core) each using kotlin.multiplatform + com.android.library. The androidApp module uses kotlin.multiplatform + com.android.application. Please analyze and migrate the entire project.",
+  "skill_command": "/kotlin-tooling-agp9-migration",
+  "source": "JetBrains/kotlinconf-app — 3 KMP library modules (Path A) + androidApp with kotlinMultiplatform (Path B), uses Compose Multiplatform, Google Services, aboutlibraries",
+  "assertions": [
+    {
+      "name": "shared-kmp-library-plugin",
+      "type": "file_contains_one_of",
+      "file": "shared/build.gradle.kts",
+      "expected_any": [
+        "com.android.kotlin.multiplatform.library",
+        "androidKmpLibrary",
+        "androidMultiplatformLibrary",
+        "android.kotlin.multiplatform.library",
+        "androidKotlinMultiplatformLibrary"
+      ]
+    },
+    {
+      "name": "shared-no-old-android-library",
+      "type": "file_not_contains",
+      "file": "shared/build.gradle.kts",
+      "expected": "libs.plugins.androidLibrary"
+    },
+    {
+      "name": "shared-no-top-level-android",
+      "type": "file_not_matches",
+      "file": "shared/build.gradle.kts",
+      "pattern": "^android\\s*\\{"
+    },
+    {
+      "name": "ui-components-kmp-library-plugin",
+      "type": "file_contains_one_of",
+      "file": "ui-components/build.gradle.kts",
+      "expected_any": [
+        "com.android.kotlin.multiplatform.library",
+        "androidKmpLibrary",
+        "androidMultiplatformLibrary",
+        "android.kotlin.multiplatform.library",
+        "androidKotlinMultiplatformLibrary"
+      ]
+    },
+    {
+      "name": "ui-components-no-old-android-library",
+      "type": "file_not_contains",
+      "file": "ui-components/build.gradle.kts",
+      "expected": "libs.plugins.androidLibrary"
+    },
+    {
+      "name": "core-kmp-library-plugin",
+      "type": "file_contains_one_of",
+      "file": "core/build.gradle.kts",
+      "expected_any": [
+        "com.android.kotlin.multiplatform.library",
+        "androidKmpLibrary",
+        "androidMultiplatformLibrary",
+        "android.kotlin.multiplatform.library",
+        "androidKotlinMultiplatformLibrary"
+      ]
+    },
+    {
+      "name": "core-no-old-android-library",
+      "type": "file_not_contains",
+      "file": "core/build.gradle.kts",
+      "expected": "libs.plugins.androidLibrary"
+    },
+    {
+      "name": "androidApp-no-kotlin-multiplatform",
+      "type": "file_not_contains",
+      "file": "androidApp/build.gradle.kts",
+      "expected": "kotlinMultiplatform"
+    },
+    {
+      "name": "agp-version-9-plus",
+      "type": "file_matches",
+      "file": "gradle/libs.versions.toml",
+      "pattern": "agp\\s*=\\s*\"9\\."
+    },
+    {
+      "name": "version-catalog-kmp-library-plugin",
+      "type": "file_contains_one_of",
+      "file": "gradle/libs.versions.toml",
+      "expected_any": [
+        "com.android.kotlin.multiplatform.library",
+        "android.kotlin.multiplatform.library"
+      ]
+    }
+  ],
+  "agent_rubric": [
+    "All three KMP library modules (shared, ui-components, core) have com.android.library replaced with com.android.kotlin.multiplatform.library",
+    "The android {} blocks in shared, ui-components, and core are nested inside kotlin { } (not at top level)",
+    "The androidApp module no longer applies kotlin.multiplatform — it uses only com.android.application (AGP 9 has built-in Kotlin support)",
+    "The androidApp module's sources are moved from androidMain to main (or the source set structure is updated for single-platform)",
+    "The version catalog has a plugin alias for com.android.kotlin.multiplatform.library",
+    "AGP version in gradle/libs.versions.toml is updated to 9.0.0 or higher",
+    "Compose Multiplatform integration still works with the new plugin configuration",
+    "The migration does not break the dependency structure between modules (androidApp depends on shared, shared depends on core and ui-components)"
+  ]
+}

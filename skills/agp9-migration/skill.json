@@ -1,0 +1,9 @@
+{
+  "name": "agp9-migration",
+  "description": "Migrates KMP projects from AGP 8.x to AGP 9.0",
+  "injection": {
+    "type": "plugin_dir",
+    "plugin_dir": "deps/kotlin-agent-skills/plugins/kotlin-agent-skills"
+  },
+  "repo": "deps/kotlin-agent-skills"
+}

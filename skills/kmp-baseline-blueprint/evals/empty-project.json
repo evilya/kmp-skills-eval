@@ -1,0 +1,76 @@
+{
+  "eval_name": "blueprint-from-scratch",
+  "project": "empty-project",
+  "prompt": "I want to create a brand new KMP project from scratch called \"WeatherPulse\" — a weather forecast app targeting Android and iOS. Use Kotlin Multiplatform with Compose Multiplatform, Room for caching weather data, Ktor for API calls, Koin for DI, and Jetpack Navigation 3 for navigation. Please: 1) Initialize the project with proper Gradle structure (settings.gradle.kts, root build.gradle.kts, gradle/libs.versions.toml, gradle.properties), 2) Create a shared module with commonMain, androidMain, and iosMain source sets, 3) Create an androidApp module and iosApp directory, 4) Create project management files in a .skills/ directory (guide with phased execution, hints, validation plan), 5) Create an AGENTS.md with project instructions, 6) Set up Room database with a WeatherForecast entity, 7) Set up navigation with 3 screens: Home (current weather), Forecast (weekly), and Settings.",
+  "source": "Greenfield KMP project created from empty directory",
+  "assertions": [
+    {
+      "name": "settings-gradle-exists",
+      "type": "file_exists",
+      "file": "settings.gradle.kts"
+    },
+    {
+      "name": "root-build-gradle-exists",
+      "type": "file_exists",
+      "file": "build.gradle.kts"
+    },
+    {
+      "name": "version-catalog-exists",
+      "type": "file_exists",
+      "file": "gradle/libs.versions.toml"
+    },
+    {
+      "name": "shared-build-gradle-exists",
+      "type": "file_exists",
+      "file": "shared/build.gradle.kts"
+    },
+    {
+      "name": "android-app-exists",
+      "type": "file_exists",
+      "file": "androidApp/build.gradle.kts"
+    },
+    {
+      "name": "agents-md-created",
+      "type": "file_exists",
+      "file": "AGENTS.md"
+    },
+    {
+      "name": "guide-task-created",
+      "type": "file_exists",
+      "file": ".skills/kmp-baseline-guide-task/SKILL.md"
+    },
+    {
+      "name": "room-dependency",
+      "type": "file_contains",
+      "file": "gradle/libs.versions.toml",
+      "expected": "room"
+    },
+    {
+      "name": "ktor-dependency",
+      "type": "file_contains",
+      "file": "gradle/libs.versions.toml",
+      "expected": "ktor"
+    },
+    {
+      "name": "shared-has-kmp-plugin",
+      "type": "file_contains_one_of",
+      "file": "shared/build.gradle.kts",
+      "expected_any": ["kotlin(\"multiplatform\")", "kotlinMultiplatform", "kotlin.multiplatform"]
+    }
+  ],
+  "agent_rubric": [
+    "A valid Gradle project structure exists: settings.gradle.kts, root build.gradle.kts, gradle/libs.versions.toml, and gradle.properties",
+    "A shared KMP module exists with build.gradle.kts applying kotlin.multiplatform and configuring androidTarget + iOS targets",
+    "The shared module has the standard KMP source set layout: commonMain, androidMain, iosMain",
+    "An Android app module exists (androidApp/) with build.gradle.kts applying com.android.application",
+    "An iOS app directory exists (iosApp/) with at least an Xcode project file or basic structure",
+    "An AGENTS.md file exists at project root with project-specific AI agent instructions",
+    "A .skills/ directory exists with a guide task file that has phased execution steps using **User Action**, **Agent Action**, and **Validation** prefixes",
+    "gradle/libs.versions.toml includes Room, Ktor, Koin dependencies with specific version numbers",
+    "Navigation uses Jetpack Navigation 3 (org.jetbrains.androidx.navigation3), NOT the older navigation-compose library",
+    "Room database is set up with a WeatherForecast entity using @Entity annotation in commonMain",
+    "Room database builder uses expect/actual pattern for platform-specific initialization",
+    "Navigation screens are implemented: Home, Forecast, and Settings with navigation between them",
+    "The project structure is internally consistent — imports and packages match across modules"
+  ]
+}

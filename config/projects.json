@@ -1,0 +1,18 @@
+{
+  "pool_root": "~/sandbox/kmp-samples",
+  "projects": [
+    "empty-project",
+    "jetcaster",
+    "kotlinconf-app",
+    "kmm-basic-sample",
+    "kmm-rss-reader",
+    "confetti",
+    "people-in-space",
+    "kampkit",
+    "rijksmuseum",
+    "d-kmp-sample",
+    "droidcon",
+    "recipe-app",
+    "shopping-by-kmp"
+  ]
+}

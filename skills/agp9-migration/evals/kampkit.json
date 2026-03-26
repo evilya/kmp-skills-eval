@@ -1,0 +1,63 @@
+{
+  "eval_name": "kampkit-library-migration",
+  "project": "kampkit",
+  "prompt": "I'm working on the KaMPKit KMP project (github.com/touchlab/KaMPKit) and want to upgrade to AGP 9.0. We're currently on AGP 8.11.2. The shared module applies both kotlin.multiplatform and com.android.library. I keep getting build errors about incompatibility. The project files are provided. Can you migrate this project to AGP 9.0?",
+  "skill_command": "/kotlin-tooling-agp9-migration",
+  "source": "Real project: touchlab/KaMPKit — shared has KMP+library (Path A), app has kotlin.android",
+  "agent_rubric": [
+    "The shared module's com.android.library plugin is replaced with com.android.kotlin.multiplatform.library (or a version catalog alias for it)",
+    "The shared module's android {} configuration block is nested inside kotlin { } (e.g. kotlin { androidLibrary { } } or kotlin { android { } }), not at the top level",
+    "Source set androidUnitTest is renamed to androidHostTest in the shared module",
+    "The org.jetbrains.kotlin.android plugin is removed from the app module (AGP 9.0 has built-in Kotlin support)",
+    "AGP version in gradle/libs.versions.toml is updated to 9.0.0 or higher",
+    "Gradle wrapper in gradle/wrapper/gradle-wrapper.properties is updated to 9.1.0 or higher",
+    "The SKIE plugin (co.touchlab.skie) compatibility with AGP 9 is handled — either updated to a compatible version, flagged with an opt-out property, or documented as a known issue",
+    "No removed gradle properties are present (android.enableLegacyVariantApi, android.r8.integratedResourceShrinking, android.enableNewResourceShrinker.preciseShrinking)",
+    "The version catalog (libs.versions.toml) has a plugin alias for the new com.android.kotlin.multiplatform.library plugin",
+    "The migration does not break the existing dependency structure between app and shared modules"
+  ],
+  "assertions": [
+    {
+      "name": "shared-kmp-library-plugin",
+      "type": "file_contains_one_of",
+      "file": "shared/build.gradle.kts",
+      "expected_any": ["com.android.kotlin.multiplatform.library", "androidKmpLibrary", "androidMultiplatformLibrary", "android.kotlin.multiplatform.library", "androidKotlinMultiplatformLibrary"]
+    },
+    {
+      "name": "shared-no-old-android-library",
+      "type": "file_not_contains",
+      "file": "shared/build.gradle.kts",
+      "expected": "libs.plugins.android.library"
+    },
+    {
+      "name": "shared-no-top-level-android",
+      "type": "file_not_matches",
+      "file": "shared/build.gradle.kts",
+      "pattern": "^android\\s*\\{"
+    },
+    {
+      "name": "shared-no-androidUnitTest",
+      "type": "file_not_contains",
+      "file": "shared/build.gradle.kts",
+      "expected": "androidUnitTest"
+    },
+    {
+      "name": "app-no-kotlin-android",
+      "type": "file_not_contains",
+      "file": "app/build.gradle.kts",
+      "expected": "kotlin.android"
+    },
+    {
+      "name": "agp-version-9-plus",
+      "type": "file_matches",
+      "file": "gradle/libs.versions.toml",
+      "pattern": "android-gradle-plugin\\s*=\\s*\"9\\."
+    },
+    {
+      "name": "gradle-wrapper-9-plus",
+      "type": "file_matches",
+      "file": "gradle/wrapper/gradle-wrapper.properties",
+      "pattern": "gradle-9\\."
+    }
+  ]
+}
