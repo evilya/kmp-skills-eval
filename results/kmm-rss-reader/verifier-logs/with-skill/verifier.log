@@ -1,0 +1,32 @@
+[2026-06-01T13:21:36+00:00] test.sh started (pwd=/root/agent-work)
+[2026-06-01T13:21:37+00:00] discovered modules: android=:androidApp desktop=<none>
+[2026-06-01T13:21:37+00:00] AGP version check: PASSED (major=9 >= 9)
+[2026-06-01T13:21:37+00:00] AGP version score: 1.0
+[2026-06-01T13:21:37+00:00] no-KMP-application check: PASSED (no module combines KMP + com.android.application)
+[2026-06-01T13:21:37+00:00] no-KMP+application score: 1.0
+[2026-06-01T13:21:38+00:00] android-app-extracted check: PASSED (standalone app modules: :androidApp)
+[2026-06-01T13:21:38+00:00] android-app-extracted score: 1.0
+[2026-06-01T13:21:38+00:00] builtin-kotlin check: PASSED (no module applies org.jetbrains.kotlin.android)
+[2026-06-01T13:21:38+00:00] built-in Kotlin score: 1.0
+[2026-06-01T13:21:38+00:00] plugin-migration check: new=2, old=0 → score=1.0 (binary)
+[2026-06-01T13:21:38+00:00] plugin-migration score: 1.0
+[2026-06-01T13:21:38+00:00] running Gradle task ':androidApp:assembleDebug' (label=android_build, attempt=1/1, project-dir=/root/agent-work)
+[2026-06-01T13:21:57+00:00] Gradle android_build: SUCCEEDED (attempt 1)
+[2026-06-01T13:21:57+00:00] android build score: 1.0
+[2026-06-01T13:21:57+00:00] desktop build: SKIPPED (no desktop-app module) → weight redistributed
+[2026-06-01T13:21:57+00:00] desktop build score: 0.0 (weight=0.0)
+[2026-06-01T13:21:57+00:00] running Gradle task ':androidApp:testDebugUnitTest jvmTest' (label=tests, attempt=1/1, project-dir=/root/agent-work)
+[2026-06-01T13:22:34+00:00] Gradle tests: SUCCEEDED (attempt 1)
+[2026-06-01T13:22:34+00:00] tests score: 1.0
+[2026-06-01T13:22:34+00:00] patch similarity: SKIPPED (no fix.patch provided yet) → score 0.0
+[2026-06-01T13:22:34+00:00] agent_log check: searching /logs/agent/trajectory.json (pattern: "name"\s*:\s*"TodoWrite"|TodoWrite)
+[2026-06-01T13:22:34+00:00] agent_log check: NOT MATCHED
+[2026-06-01T13:22:34+00:00] planning score: 0.0
+[2026-06-01T13:22:34+00:00] agent_log check: searching /logs/agent/trajectory.json (pattern: gradlew.*(build|assembleRelease|assemble[A-Z]))
+[2026-06-01T13:22:34+00:00] agent_log check: MATCHED
+[2026-06-01T13:22:34+00:00] agent build score: 1.0
+[2026-06-01T13:22:34+00:00] agent_log check: searching /logs/agent/trajectory.json (pattern: gradlew.*(\btest\b|:check\b|\bcheck\b))
+[2026-06-01T13:22:34+00:00] agent_log check: MATCHED
+[2026-06-01T13:22:34+00:00] agent test score: 1.0
+[2026-06-01T13:22:34+00:00] scores: agp=1.0 no_kmp_app=1.0 android_extracted=1.0 builtin_kotlin=1.0 plugin_migration=1.0 android=1.0 desktop=0.0 tests=1.0 similarity=0.0 planning=0.0 agent_build=1.0 agent_test=1.0
+[2026-06-01T13:22:35+00:00] test.sh done — final reward: 0.8833

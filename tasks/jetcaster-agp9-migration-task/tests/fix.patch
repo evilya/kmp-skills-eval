@@ -1,0 +1,192 @@
+Subject: [PATCH] Migrate to AGP 9
+---
+Index: gradle/libs.versions.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+--- a/gradle/libs.versions.toml	(revision 2f9ec2d1accdb26588093ceb743701f6c6734ee4)
++++ b/gradle/libs.versions.toml	(date 1780061386756)
+@@ -1,6 +1,6 @@
+ [versions]
+ accompanist = "0.37.3"
+-androidGradlePlugin = "8.11.1"
++androidGradlePlugin = "9.0.1"
+ androidx-activity-compose = "1.10.1"
+ androidx-appcompat = "1.7.1"
+ androidx-compose-bom = "2025.09.00"
+@@ -15,11 +15,11 @@
+ androidx-test = "1.6.1"
+ androidx-window = "1.4.0"
+ androidxHiltNavigationCompose = "1.2.0"
+-compose-multiplatform = "1.10.0-beta02" # 1.10 needed for Material Expressive
+-compose-multiplatform-material3 = "1.10.0-alpha05"
++compose-multiplatform = "1.11.0"
++compose-multiplatform-material3 = "1.11.0-alpha07"
+ coil = "3.3.0"
+ # @keep
+-cmp-m3-adaptive = "1.2.0-beta01"
++cmp-m3-adaptive = "1.3.0-alpha06"
+ compileSdk = "36"
+ coroutines = "1.10.2"
+ gradle-versions = "0.52.0"
+@@ -29,9 +29,9 @@
+ jdkDesugar = "2.1.5"
+ kotlinx-test = "1.8.20"
+ kotlinxDatetime = "0.7.1"
+-kotlin = "2.2.21"
++kotlin = "2.3.21"
+ kotlinx_immutable = "0.4.0"
+-ksp = "2.2.21-2.0.4"
++ksp = "2.3.9"
+ navigationCompose = "2.9.1"
+ # @keep
+ minSdk = "23"
+@@ -84,6 +84,10 @@
+ coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+ compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
++compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-multiplatform" }
++compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
++compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
++compose-components-ui-tooling-preview = { module = "org.jetbrains.compose.components:components-ui-tooling-preview", version.ref = "compose-multiplatform" }
+ compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-multiplatform-material3" }
+ compose-material3-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "cmp-m3-adaptive" }
+ compose-material3-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout" , version.ref="cmp-m3-adaptive"}
+@@ -120,7 +124,6 @@
+ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+ gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }
+-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+Index: mobile/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/mobile/build.gradle.kts b/mobile/build.gradle.kts
+--- a/mobile/build.gradle.kts	(revision 2f9ec2d1accdb26588093ceb743701f6c6734ee4)
++++ b/mobile/build.gradle.kts	(date 1779982857658)
+@@ -17,13 +17,13 @@
+ 
+ plugins {
+     alias(libs.plugins.android.application)
+-    alias(libs.plugins.kotlin.android)
+     alias(libs.plugins.ksp)
+     alias(libs.plugins.compose.compiler)
+ }
+ 
+ kotlin {
+     compilerOptions {
++        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+         freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
+     }
+ }
+@@ -83,9 +83,6 @@
+         sourceCompatibility = JavaVersion.VERSION_17
+         targetCompatibility = JavaVersion.VERSION_17
+     }
+-    kotlinOptions {
+-        jvmTarget = "17"
+-    }
+ 
+     buildFeatures {
+         compose = true
+Index: build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/build.gradle.kts b/build.gradle.kts
+--- a/build.gradle.kts	(revision 2f9ec2d1accdb26588093ceb743701f6c6734ee4)
++++ b/build.gradle.kts	(date 1779982851336)
+@@ -19,7 +19,6 @@
+     alias(libs.plugins.version.catalog.update)
+     alias(libs.plugins.android.application) apply false
+     alias(libs.plugins.android.library) apply false
+-    alias(libs.plugins.kotlin.android) apply false
+     alias(libs.plugins.kotlin.parcelize) apply false
+     alias(libs.plugins.ksp) apply false
+     alias(libs.plugins.compose.compiler) apply false
+Index: sharedUi/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/sharedUi/build.gradle.kts b/sharedUi/build.gradle.kts
+--- a/sharedUi/build.gradle.kts	(revision 2f9ec2d1accdb26588093ceb743701f6c6734ee4)
++++ b/sharedUi/build.gradle.kts	(date 1779985938800)
+@@ -1,4 +1,3 @@
+-import com.android.build.api.dsl.androidLibrary
+ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+ 
+ plugins {
+@@ -53,19 +52,19 @@
+             implementation(libs.koin.core)
+             implementation(libs.koin.compose.viewmodel)
+             // Compose Multiplatform dependencies
+-            implementation(compose.runtime)
+-            implementation(compose.foundation)
++            implementation(libs.compose.runtime)
++            implementation(libs.compose.foundation)
+ 
+             implementation(libs.compose.material3)
+             implementation(libs.compose.material3.adaptive)
+             implementation(libs.compose.material3.adaptive.layout)
+             implementation(libs.compose.material3.adaptive.navigation)
+ 
+-            implementation(compose.ui)
++            implementation(libs.compose.ui)
+             // TODO this needs to be added, otherwise BackHandler build fails unresolved
+             implementation(libs.compose.ui.backhandler)
+-            implementation(compose.components.uiToolingPreview)
+-            implementation(compose.components.resources)
++            implementation(libs.compose.components.ui.tooling.preview)
++            implementation(libs.compose.components.resources)
+             implementation(libs.compose.navigation)
+ 
+             //Image loading
+Index: core/designsystem/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/designsystem/build.gradle.kts b/core/designsystem/build.gradle.kts
+--- a/core/designsystem/build.gradle.kts	(revision 2f9ec2d1accdb26588093ceb743701f6c6734ee4)
++++ b/core/designsystem/build.gradle.kts	(date 1779985934220)
+@@ -47,11 +47,11 @@
+     sourceSets {
+         commonMain.dependencies {
+             // Compose Multiplatform dependencies
+-            implementation(compose.runtime)
+-            implementation(compose.foundation)
+-            implementation(compose.material3)
+-            implementation(compose.ui)
+-            implementation(compose.components.resources)
++            implementation(libs.compose.runtime)
++            implementation(libs.compose.foundation)
++            implementation(libs.compose.material3)
++            implementation(libs.compose.ui)
++            implementation(libs.compose.components.resources)
+ 
+             //Image loading
+             implementation(libs.coil.kt.compose)
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+--- a/gradle/wrapper/gradle-wrapper.properties	(revision 2f9ec2d1accdb26588093ceb743701f6c6734ee4)
++++ b/gradle/wrapper/gradle-wrapper.properties	(date 1779982828012)
+@@ -14,6 +14,6 @@
+ 
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-8.14.2-bin.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-9.1.0-bin.zip
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists

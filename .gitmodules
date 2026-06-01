@@ -1,3 +1,0 @@
-[submodule "deps/kotlin-agent-skills"]
-	path = deps/kotlin-agent-skills
-	url = https://github.com/Kotlin/kotlin-agent-skills.git

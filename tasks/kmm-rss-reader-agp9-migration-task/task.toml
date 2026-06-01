@@ -1,0 +1,40 @@
+schema_version = "1.2"
+artifacts = []
+
+[task]
+name = "jetbrains/kmm-rss-reader-agp9-migration-task"
+description = "Evaluate agent ability to migrate the KMM RSS Reader production sample to AGP 9.0+"
+authors = []
+keywords = ["kotlin", "kmp", "android", "gradle", "agp", "migration", "rss-reader"]
+
+[metadata]
+instance_id = "kmm-rss-reader-agp9-migration-task"
+difficulty = "hard"
+category = "migration"
+repo = "Kotlin/kmm-production-sample"
+base_commit = "d22211507fc875849218014ad3cc09525c10247b"
+url = "https://github.com/Kotlin/kmm-production-sample.git"
+
+[verifier]
+timeout_sec = 900
+
+[verifier.env]
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+
+[agent]
+timeout_sec = 6000
+
+[environment]
+build_timeout_sec = 6000
+os = "linux"
+cpus = 4
+memory_mb = 16384
+storage_mb = 20480
+gpus = 0
+allow_internet = true
+mcp_servers = []
+
+[environment.env]
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+
+[solution.env]
